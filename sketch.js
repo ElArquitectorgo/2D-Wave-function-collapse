@@ -1,14 +1,29 @@
-const grid = [];
+let grid = [];
 
 const DIM = 2;
 const tiles = [];
 
 function preload() {
-  tiles[0] = loadImage("tiles/blank.png");
-  tiles[1] = loadImage("tiles/up.png");
-  tiles[2] = loadImage("tiles/right.png");
-  tiles[3] = loadImage("tiles/down.png");
-  tiles[4] = loadImage("tiles/left.png");
+  tiles[0] = {
+    image: loadImage("tiles/blank.png"),
+    edges: [0, 0, 0, 0]
+  }
+  tiles[1] = {
+    image: loadImage("tiles/up.png"),
+    edges: [1, 1, 0, 1]
+  }
+  tiles[2] = {
+    image: loadImage("tiles/right.png"),
+    edges: [1, 1, 1, 0]
+  }
+  tiles[3] = {
+    image: loadImage("tiles/down.png"),
+    edges: [0, 1, 1, 1]
+  }
+  tiles[4] = {
+    image: loadImage("tiles/left.png"),
+    edges: [1, 0, 1, 1]
+  }
 }
 
 function setup() {
@@ -17,13 +32,19 @@ function setup() {
   for (let i = 0; i < DIM * DIM; i++) {
     grid[i] = {
       collapsed: false,
-      options: [0, 1, 2, 3, 4]
+      option: [0, 1, 2, 3, 4]
     }
   }
+}
 
-  grid[3].collapsed = true;
-  grid[2].collapsed = true;
-
+function checkValid(arr, valid) {
+  //console.log(arr, valid);
+  for (let i = arr.length - 1; i >= 0; i--) {
+    let element = arr[i];
+    if (!valid.includes(element)) {
+      arr.splice(i, 1);
+    }
+  }
 }
 
 
@@ -36,8 +57,8 @@ function draw() {
     for (let i = 0; i < DIM; i++) {
       let cell = grid[i + j * DIM];
       if (cell.collapsed) {
-        let index = cell.options[3];
-        image(tiles[index], i * w, j * h, w, h);
+        let index = cell.option[0];
+        image(tiles[index].image, i * w, j * h, w, h);
       } else {
         fill(0);
         stroke(255)
@@ -45,4 +66,23 @@ function draw() {
       }
     }
   }
+  let gridCopy = grid.slice();
+  gridCopy = gridCopy.filter((a) => !a.collapsed);
+
+  if (gridCopy.length == 0) {
+    return;
+  }
+  gridCopy.sort((a, b) => {
+    return a.option.length - b.option.length;
+  });
+
+  let len = gridCopy[0].option.length;
+  let stopIndex = 0;
+  for (let i = 1; i < gridCopy.length; i++) {
+    if (gridCopy[i].option.length > len) {
+      stopIndex = i;
+      break;
+    }
+
+  grid = nextGrid;
 }
