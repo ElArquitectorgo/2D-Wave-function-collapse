@@ -2,32 +2,26 @@ let grid = [];
 
 const DIM = 2;
 const tiles = [];
+let tileImages = []
 
 function preload() {
-  tiles[0] = {
-    image: loadImage("tiles/blank.png"),
-    edges: [0, 0, 0, 0]
-  }
-  tiles[1] = {
-    image: loadImage("tiles/up.png"),
-    edges: [1, 1, 0, 1]
-  }
-  tiles[2] = {
-    image: loadImage("tiles/right.png"),
-    edges: [1, 1, 1, 0]
-  }
-  tiles[3] = {
-    image: loadImage("tiles/down.png"),
-    edges: [0, 1, 1, 1]
-  }
-  tiles[4] = {
-    image: loadImage("tiles/left.png"),
-    edges: [1, 0, 1, 1]
-  }
+  tileImages = [
+    loadImage("tiles/blank.png"),
+    loadImage("tiles/up.png"),
+    loadImage("tiles/right.png"),
+    loadImage("tiles/down.png"),
+    loadImage("tiles/left.png")
+  ]
 }
 
 function setup() {
   createCanvas(400, 400);
+
+  tiles[0] = new Tile(tileImages[0], [0, 0, 0, 0]);
+  tiles[1] = new Tile(tileImages[1], [1, 1, 0, 1]);
+  tiles[2] = new Tile(tileImages[2], [1, 1, 1, 0]);
+  tiles[3] = new Tile(tileImages[3], [0, 1, 1, 1]);
+  tiles[4] = new Tile(tileImages[4], [1, 0, 1, 1]);
 
   for (let i = 0; i < DIM * DIM; i++) {
     grid[i] = {
@@ -38,7 +32,6 @@ function setup() {
 }
 
 function checkValid(arr, valid) {
-  //console.log(arr, valid);
   for (let i = arr.length - 1; i >= 0; i--) {
     let element = arr[i];
     if (!valid.includes(element)) {
@@ -66,6 +59,7 @@ function draw() {
       }
     }
   }
+
   let gridCopy = grid.slice();
   gridCopy = gridCopy.filter((a) => !a.collapsed);
 
@@ -83,6 +77,5 @@ function draw() {
       stopIndex = i;
       break;
     }
-
-  grid = nextGrid;
+  }
 }
