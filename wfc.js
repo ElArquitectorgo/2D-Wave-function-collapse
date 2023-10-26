@@ -32,20 +32,20 @@ function setup() {
     }
 }
 
-function wfc() {
+function getFilteredGrid() {
     // Get only the cells that are not collapsed
     let gridCopy = grid.slice();
     gridCopy = gridCopy.filter((a) => !a.collapsed);
-
-    if (gridCopy.length == 0) {
-        return;
-    }
 
     // Sort by entropy (length of tile options)
     gridCopy.sort((a, b) => {
         return a.tileOptions.length - b.tileOptions.length;
     });
 
+    return gridCopy;
+}
+
+function collapseCell(gridCopy) {
     // Get only the cells with minimum entropy
     let len = gridCopy[0].tileOptions.length;
     let stopIndex = 0;
@@ -63,8 +63,6 @@ function wfc() {
     const cell = random(gridCopy);
     cell.collapsed = true;
     cell.tileOptions = [random(cell.tileOptions)];
-       
-    reCalculateEntropy();
 }
 
 function getValidTiles(options, validOptions) {
@@ -127,6 +125,15 @@ function reCalculateEntropy() {
             grid[index].tileOptions = options;
         }
     }
+}
+
+function wfc() {
+    let gridCopy = getFilteredGrid();
+    if (gridCopy.length == 0) {
+        return;
+    }
+    collapseCell(gridCopy);
+    reCalculateEntropy();
 }
 
 function draw() {
