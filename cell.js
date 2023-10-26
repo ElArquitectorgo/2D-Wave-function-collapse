@@ -3,8 +3,4 @@ class Cell {
         this.collapsed = false;
         this.tileOptions = tileOptions;
     }
-
-    setTileOptions(tileOptions) {
-        this.tileOptions = tileOptions;
-    }
 }
