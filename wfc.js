@@ -80,7 +80,7 @@ function reCalculateEntropy() {
         for (let j = 0; j < DIM; j++) {
             let index = i + j * DIM;
             if (grid[index].collapsed) continue;
-
+            
             let options = new Array(tiles.length).fill(0).map((x, i) => i);
             // Up
             if (j > 0) {
@@ -129,6 +129,7 @@ function reCalculateEntropy() {
 
 function wfc() {
     let gridCopy = getFilteredGrid();
+    // If gridCopy.length == 0 then all cells are collapsed
     if (gridCopy.length == 0) {
         return;
     }
